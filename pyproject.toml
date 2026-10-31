@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "show-dont-cite"
+version = "0.1.0"
+description = "Answers backed by runnable proofs of concept, with a negation check for hollow evidence"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Zubair"}]
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+hf = ["transformers>=4.44", "accelerate", "bitsandbytes"]
+dev = ["pytest>=7"]
+
+[project.scripts]
+sdc = "sdc.cli:main"
+
+[tool.setuptools]
+packages = ["sdc"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

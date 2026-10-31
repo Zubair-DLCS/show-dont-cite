@@ -1,0 +1,686 @@
+<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Show, Don&#x27;t Cite: hollow-plain prover</title><style>
+body{font:15px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f6f3;color:#1c1c1c}
+main{max-width:1100px;margin:0 auto;padding:32px 20px}
+h1{font-size:26px;margin:0 0 4px}.sub{color:#555;margin:0 0 24px}
+.tiles{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.tile{background:#fff;border:1px solid #e2e2dc;border-radius:10px;padding:12px 16px;min-width:150px}
+.tile b{display:block;font-size:22px}.tile span{color:#555;font-size:13px}
+.card{background:#fff;border:1px solid #e2e2dc;border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.badge{color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;letter-spacing:.02em}
+.meta{color:#666;font-size:13px}.wrong{color:#b3261e;font-weight:600}
+.claim{margin:8px 0 10px;font-size:16px}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:800px){.sides{grid-template-columns:1fr}}
+.side{background:#fafaf8;border:1px solid #ecece6;border-radius:8px;padding:10px}
+.side h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;color:#555;letter-spacing:.04em}
+.st{font-weight:700}.st.pass{color:#1f7a4d}.st.fail{color:#1d5fa8}.st.other{color:#6b3fa0}
+pre{white-space:pre-wrap;word-break:break-word;background:#1e1e1e;color:#e6e6e6;padding:10px;border-radius:6px;font-size:12.5px;max-height:420px;overflow:auto}
+summary{cursor:pointer;color:#333;font-size:13px;margin-top:6px}
+.flag{background:#fdecea;color:#b3261e;border-radius:4px;padding:1px 6px;font-size:12px;margin-left:6px}
+.filters{margin:0 0 16px}.filters button{border:1px solid #ccc;background:#fff;border-radius:6px;padding:4px 10px;margin:0 6px 6px 0;cursor:pointer}
+.filters button.on{background:#1c1c1c;color:#fff;border-color:#1c1c1c}
+</style></head><body><main><h1>Show, Don&#x27;t Cite: hollow-plain prover</h1><p class='sub'>Prover: <b>hollow-plain</b>. Every claim gets two independently generated proofs of concept: one for the claim and one for its negation. If both pass, the evidence is hollow.</p><div class='tiles'><div class='tile'><b>100%</b><span>false claims accepted, single PoC</span></div><div class='tile'><b>0%</b><span>false claims accepted, negation-checked</span></div><div class='tile'><b>n/a</b><span>precision of definite verdicts</span></div><div class='tile'><b>100%</b><span>hollow (VACUOUS) evidence</span></div><div class='tile'><b>66</b><span>claims</span></div></div><div class='filters'><button onclick="f('ALL',this)" class=on>All</button><button onclick="f('WRONG',this)">Wrong</button><button onclick="f('DEMONSTRATED',this)">Demonstrated</button><button onclick="f('REFUTED',this)">Refuted</button><button onclick="f('VACUOUS',this)">Vacuous</button><button onclick="f('INCONCLUSIVE',this)">Inconclusive</button><button onclick="f('ABSTAIN',this)">Abstain</button><button onclick="f('ERROR',this)">Error</button></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c001 &middot; python &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Python&#x27;s built-in sorted() is stable: items with equal keys keep their original relative order.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Python&#x27;s built-in sorted() is stable: items with equal keys keep their original relative order.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Python&#x27;s built-in sorted() is not stable: items with equal keys can lose their original relative order.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c002 &middot; numerics &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In Python, the expression 0.1 + 0.2 == 0.3 evaluates to True.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, the expression 0.1 + 0.2 == 0.3 evaluates to True.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, the expression 0.1 + 0.2 == 0.3 evaluates to False.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c003 &middot; python &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In Python 3.7+, iterating over a dict yields keys in insertion order.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python 3.7+, iterating over a dict yields keys in insertion order.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python 3.7+, iterating over a dict does not necessarily yield keys in insertion order.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c004 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>A mutable default argument in a Python function (e.g. def f(x=[])) is re-created on every call.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A mutable default argument in a Python function (e.g. def f(x=[])) is re-created on every call.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>A mutable default argument in a Python function (e.g. def f(x=[])) is created once and shared across calls.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c005 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In CPython, for any two int objects a and b, (a is b) always gives the same result as (a == b).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In CPython, for any two int objects a and b, (a is b) always gives the same result as (a == b).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In CPython, there exist int objects a and b for which (a is b) differs from (a == b).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c006 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In Python 3, round(2.5) returns 3.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python 3, round(2.5) returns 3.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python 3, round(2.5) does not return 3.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c007 &middot; python &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Python ints have arbitrary precision: arithmetic on very large ints (e.g. 2**1000) is exact and does not overflow.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Python ints have arbitrary precision: arithmetic on very large ints (e.g. 2**1000) is exact and does not overflow.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Python ints overflow or lose precision for very large values such as 2**1000.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c008 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>list.copy() makes a deep copy, so modifying a nested list inside the copy does not affect the original.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>list.copy() makes a deep copy, so modifying a nested list inside the copy does not affect the original.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>list.copy() makes a shallow copy, so modifying a nested list inside the copy also affects the original.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c009 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In CPython, iterating over a set always yields elements in the order they were inserted.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In CPython, iterating over a set always yields elements in the order they were inserted.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In CPython, iterating over a set does not always yield elements in the order they were inserted.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c010 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In Python, -7 // 2 evaluates to -3.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, -7 // 2 evaluates to -3.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, -7 // 2 does not evaluate to -3.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c011 &middot; python &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In Python, -7 % 3 evaluates to 2.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, -7 % 3 evaluates to 2.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, -7 % 3 does not evaluate to 2.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c012 &middot; python &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In Python, bool is a subclass of int.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, bool is a subclass of int.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, bool is not a subclass of int.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c013 &middot; numerics &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In Python, float(&#x27;nan&#x27;) == float(&#x27;nan&#x27;) evaluates to True.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, float(&#x27;nan&#x27;) == float(&#x27;nan&#x27;) evaluates to True.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, float(&#x27;nan&#x27;) == float(&#x27;nan&#x27;) evaluates to False.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c014 &middot; numerics &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>math.isclose(0.1 + 0.2, 0.3) returns True in Python with default tolerances.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>math.isclose(0.1 + 0.2, 0.3) returns True in Python with default tolerances.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>math.isclose(0.1 + 0.2, 0.3) returns False in Python with default tolerances.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c015 &middot; numerics &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>IEEE-754 double-precision addition is associative: (a + b) + c always equals a + (b + c).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>IEEE-754 double-precision addition is associative: (a + b) + c always equals a + (b + c).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>IEEE-754 double-precision addition is not associative: (a + b) + c can differ from a + (b + c).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c016 &middot; numerics &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>The integer 2**53 + 1 can be represented exactly as an IEEE-754 double.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The integer 2**53 + 1 can be represented exactly as an IEEE-754 double.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The integer 2**53 + 1 cannot be represented exactly as an IEEE-754 double.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c017 &middot; numerics &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>For some lists of floats, Python&#x27;s built-in sum() and math.fsum() return different results.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For some lists of floats, Python&#x27;s built-in sum() and math.fsum() return different results.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Python&#x27;s built-in sum() and math.fsum() return the same result for every list of floats.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c018 &middot; numerics &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In float64, the one-pass variance formula mean(x^2) - mean(x)^2 has a relative error above 1% on the data [1e9+4, 1e9+7, 1e9+13, 1e9+16].</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In float64, the one-pass variance formula mean(x^2) - mean(x)^2 has a relative error above 1% on the data [1e9+4, 1e9+7, 1e9+13, 1e9+16].</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In float64, the one-pass variance formula mean(x^2) - mean(x)^2 has a relative error of at most 1% on the data [1e9+4, 1e9+7, 1e9+13, 1e9+16].</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c019 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Quicksort that always picks the first element as pivot performs a quadratic number of comparisons on already-sorted input.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Quicksort that always picks the first element as pivot performs a quadratic number of comparisons on already-sorted input.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Quicksort that always picks the first element as pivot performs a sub-quadratic number of comparisons on already-sorted input.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c020 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Binary search can fail to find an element that is present if the input list is not sorted.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Binary search can fail to find an element that is present if the input list is not sorted.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Binary search always finds an element that is present, even if the input list is not sorted.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c021 &middot; algorithms &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Dijkstra&#x27;s algorithm, in the form where a settled vertex is never revisited, always returns correct shortest-path distances on graphs with negative edge weights (but no negative cycles).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Dijkstra&#x27;s algorithm, in the form where a settled vertex is never revisited, always returns correct shortest-path distances on graphs with negative edge weights (but no negative cycles).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Dijkstra&#x27;s algorithm, in the form where a settled vertex is never revisited, can return incorrect shortest-path distances on graphs with negative edge weights (but no negative cycles).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.13s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c022 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Bubble sort with an early-exit flag performs only a linear number of comparisons on already-sorted input.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Bubble sort with an early-exit flag performs only a linear number of comparisons on already-sorted input.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Bubble sort with an early-exit flag performs a super-linear number of comparisons on already-sorted input.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.14s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c023 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In Python, testing membership of an absent value is faster in a set than in a list when both hold 10,000 integers.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, testing membership of an absent value is faster in a set than in a list when both hold 10,000 integers.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, testing membership of an absent value is not faster in a set than in a list when both hold 10,000 integers.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c024 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Python&#x27;s heapq module implements a max-heap by default, so heap[0] is the largest element.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Python&#x27;s heapq module implements a max-heap by default, so heap[0] is the largest element.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Python&#x27;s heapq module implements a min-heap by default, so heap[0] is the smallest element.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c025 &middot; algorithms &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>For coin denominations {1, 3, 4}, the greedy algorithm (always take the largest coin that fits) uses the minimum number of coins for every amount.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For coin denominations {1, 3, 4}, the greedy algorithm (always take the largest coin that fits) uses the minimum number of coins for every amount.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For coin denominations {1, 3, 4}, the greedy algorithm (always take the largest coin that fits) does not use the minimum number of coins for some amount.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c026 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>For coin denominations {1, 5, 10, 25}, the greedy algorithm uses the minimum number of coins for every amount from 1 to 1000.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For coin denominations {1, 5, 10, 25}, the greedy algorithm uses the minimum number of coins for every amount from 1 to 1000.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For coin denominations {1, 5, 10, 25}, the greedy algorithm uses more than the minimum number of coins for some amount from 1 to 1000.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.13s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c027 &middot; algorithms &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>The 0/1 knapsack problem is always solved optimally by greedily taking items in decreasing order of value-to-weight ratio.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The 0/1 knapsack problem is always solved optimally by greedily taking items in decreasing order of value-to-weight ratio.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Greedily taking items in decreasing order of value-to-weight ratio does not always solve the 0/1 knapsack problem optimally.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c028 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Computing the n-th Fibonacci number with plain recursion (no memoization) makes a number of calls that grows exponentially in n.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Computing the n-th Fibonacci number with plain recursion (no memoization) makes a number of calls that grows exponentially in n.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Computing the n-th Fibonacci number with plain recursion (no memoization) makes a number of calls that grows only polynomially in n.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c029 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In a group of 23 people with uniformly random birthdays over 365 days, the probability that at least two share a birthday exceeds 50%.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In a group of 23 people with uniformly random birthdays over 365 days, the probability that at least two share a birthday exceeds 50%.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In a group of 23 people with uniformly random birthdays over 365 days, the probability that at least two share a birthday is at most 50%.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c030 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>In the Monty Hall problem, a contestant who always switches wins about 2/3 of the time.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In the Monty Hall problem, a contestant who always switches wins about 2/3 of the time.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In the Monty Hall problem, a contestant who always switches does not win about 2/3 of the time.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c031 &middot; probability &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>The sample mean of i.i.d. standard Cauchy samples concentrates around 0 as the sample size grows.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The sample mean of i.i.d. standard Cauchy samples concentrates around 0 as the sample size grows.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The sample mean of i.i.d. standard Cauchy samples does not concentrate around 0 as the sample size grows.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c032 &middot; probability &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>If two random variables have Pearson correlation 0, they are independent.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>If two random variables have Pearson correlation 0, they are independent.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Two random variables can have Pearson correlation 0 and still be dependent.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c033 &middot; probability &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>The average of two independent Uniform(0,1) random variables is itself uniformly distributed on (0,1).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The average of two independent Uniform(0,1) random variables is itself uniformly distributed on (0,1).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The average of two independent Uniform(0,1) random variables is not uniformly distributed on (0,1).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c034 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>The sum of 30 i.i.d. Exponential(1) random variables has skewness below 0.5.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The sum of 30 i.i.d. Exponential(1) random variables has skewness below 0.5.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.13s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The sum of 30 i.i.d. Exponential(1) random variables has skewness of at least 0.5.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c035 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>A bootstrap sample (n draws with replacement from n items, n large) leaves out about 36.8% of the items on average.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A bootstrap sample (n draws with replacement from n items, n large) leaves out about 36.8% of the items on average.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>A bootstrap sample (n draws with replacement from n items, n large) does not leave out about 36.8% of the items on average.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c036 &middot; probability &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Running 20 independent hypothesis tests at alpha = 0.05 when all null hypotheses are true gives a family-wise error rate below 10%.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Running 20 independent hypothesis tests at alpha = 0.05 when all null hypotheses are true gives a family-wise error rate below 10%.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Running 20 independent hypothesis tests at alpha = 0.05 when all null hypotheses are true gives a family-wise error rate of at least 10%.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c037 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>A treatment can have a higher success rate than another in every subgroup and yet a lower success rate overall (Simpson&#x27;s paradox).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A treatment can have a higher success rate than another in every subgroup and yet a lower success rate overall (Simpson&#x27;s paradox).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>If a treatment has a higher success rate than another in every subgroup, it must also have a higher success rate overall.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c038 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>For a set of numbers, the median minimises the mean absolute deviation sum(|x - c|)/n over all choices of c.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For a set of numbers, the median minimises the mean absolute deviation sum(|x - c|)/n over all choices of c.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.16s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For some set of numbers, a value other than the median gives a strictly lower mean absolute deviation sum(|x - c|)/n.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c039 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Standardising the features (z-scoring) changes the predictions of an ordinary least-squares linear regression with an intercept.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Standardising the features (z-scoring) changes the predictions of an ordinary least-squares linear regression with an intercept.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Standardising the features (z-scoring) does not change the predictions of an ordinary least-squares linear regression with an intercept.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c040 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Rescaling a single feature can change the predictions of a k-nearest-neighbours classifier using Euclidean distance.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Rescaling a single feature can change the predictions of a k-nearest-neighbours classifier using Euclidean distance.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Rescaling a single feature can never change the predictions of a k-nearest-neighbours classifier using Euclidean distance.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c041 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>A linear classifier (a single-layer perceptron, sign(w.x + b)) can perfectly classify the XOR problem.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A linear classifier (a single-layer perceptron, sign(w.x + b)) can perfectly classify the XOR problem.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.14s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>No linear classifier (single-layer perceptron, sign(w.x + b)) can perfectly classify the XOR problem.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c042 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>A classifier that never predicts the positive class can achieve above 95% accuracy on a dataset.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A classifier that never predicts the positive class can achieve above 95% accuracy on a dataset.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>A classifier that never predicts the positive class cannot achieve above 95% accuracy on any dataset.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c043 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>A k-nearest-neighbours classifier with k equal to the training-set size predicts the majority training class for every input.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A k-nearest-neighbours classifier with k equal to the training-set size predicts the majority training class for every input.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>A k-nearest-neighbours classifier with k equal to the training-set size can predict a non-majority class for some input.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c044 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>The softmax function is unchanged when the same constant is added to all logits.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The softmax function is unchanged when the same constant is added to all logits.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The softmax function changes when the same constant is added to all logits.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c045 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>The softmax function is unchanged when all logits are multiplied by the same positive constant.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The softmax function is unchanged when all logits are multiplied by the same positive constant.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The softmax function can change when all logits are multiplied by the same positive constant.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c046 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>A two-layer ReLU network with all weights and biases initialised to zero breaks hidden-unit symmetry when trained with gradient descent.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A two-layer ReLU network with all weights and biases initialised to zero breaks hidden-unit symmetry when trained with gradient descent.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>A two-layer ReLU network with all weights and biases initialised to zero keeps all hidden units identical when trained with gradient descent.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c047 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Gradient descent on f(x) = x^2 with learning rate 1.1 diverges.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Gradient descent on f(x) = x^2 with learning rate 1.1 diverges.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Gradient descent on f(x) = x^2 with learning rate 1.1 converges.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c048 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>On a linear-regression problem with irrelevant features, L1 regularisation (lasso) sets some coefficients exactly to zero while L2 regularisation (ridge) generally does not.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>On a linear-regression problem with irrelevant features, L1 regularisation (lasso) sets some coefficients exactly to zero while L2 regularisation (ridge) generally does not.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>On a linear-regression problem with irrelevant features, lasso does not set coefficients exactly to zero any more than ridge does.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c049 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Mean squared error and mean absolute error always rank two models&#x27; predictions in the same order.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Mean squared error and mean absolute error always rank two models&#x27; predictions in the same order.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Mean squared error and mean absolute error can rank two models&#x27; predictions in opposite orders.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c050 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>ROC AUC is unchanged when all predicted scores are passed through the same strictly increasing function.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>ROC AUC is unchanged when all predicted scores are passed through the same strictly increasing function.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>ROC AUC can change when all predicted scores are passed through the same strictly increasing function.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c051 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Log loss (cross-entropy) is unchanged when all predicted probabilities are passed through the same strictly increasing function mapping (0,1) to (0,1).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Log loss (cross-entropy) is unchanged when all predicted probabilities are passed through the same strictly increasing function mapping (0,1) to (0,1).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Log loss (cross-entropy) can change when all predicted probabilities are passed through the same strictly increasing function mapping (0,1) to (0,1).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c052 &middot; security &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>After observing 624 consecutive 32-bit outputs of Python&#x27;s random module (Mersenne Twister), its future outputs can be predicted exactly.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>After observing 624 consecutive 32-bit outputs of Python&#x27;s random module (Mersenne Twister), its future outputs can be predicted exactly.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Observing 624 consecutive 32-bit outputs of Python&#x27;s random module (Mersenne Twister) is not enough to predict its future outputs exactly.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.13s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c053 &middot; security &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Base64-encoded data cannot be recovered without knowing a secret key.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Base64-encoded data cannot be recovered without knowing a secret key.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Base64-encoded data can be recovered without knowing any secret key.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c054 &middot; security &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>The regular expression ^[a-z]+@[a-z]+\.com$ matches every valid email address ending in .com.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The regular expression ^[a-z]+@[a-z]+\.com$ matches every valid email address ending in .com.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The regular expression ^[a-z]+@[a-z]+\.com$ fails to match some valid email address ending in .com.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c055 &middot; security &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>By default, hash() of the same Python string gives the same value across separate interpreter runs.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>By default, hash() of the same Python string gives the same value across separate interpreter runs.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>By default, hash() of the same Python string can give different values across separate interpreter runs.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c056 &middot; strings &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>UTF-8 encodes every Unicode scalar value in at most 4 bytes.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>UTF-8 encodes every Unicode scalar value in at most 4 bytes.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>UTF-8 needs more than 4 bytes for some Unicode scalar value.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c057 &middot; strings &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>For any Python str s, len(s) equals the number of bytes in s.encode(&#x27;utf-8&#x27;).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For any Python str s, len(s) equals the number of bytes in s.encode(&#x27;utf-8&#x27;).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For some Python str s, len(s) differs from the number of bytes in s.encode(&#x27;utf-8&#x27;).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c058 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>The expected number of fair-coin flips needed to see two heads in a row (HH) is 6.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The expected number of fair-coin flips needed to see two heads in a row (HH) is 6.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The expected number of fair-coin flips needed to see two heads in a row (HH) is not 6.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c059 &middot; probability &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>For a fair coin, the expected number of flips until the pattern HT first appears equals the expected number until HH first appears.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For a fair coin, the expected number of flips until the pattern HT first appears equals the expected number until HH first appears.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For a fair coin, the expected number of flips until the pattern HT first appears differs from the expected number until HH first appears.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c060 &middot; linear-algebra &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Matrix multiplication of square matrices is commutative: AB = BA for all square A and B.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Matrix multiplication of square matrices is commutative: AB = BA for all square A and B.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Matrix multiplication of square matrices is not commutative: AB can differ from BA.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c061 &middot; linear-algebra &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>For square matrices, det(AB) = det(A) * det(B).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For square matrices, det(AB) = det(A) * det(B).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For some square matrices, det(AB) differs from det(A) * det(B).</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>c062 &middot; linear-algebra &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>All eigenvalues of a real symmetric matrix are real.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>All eigenvalues of a real symmetric matrix are real.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.14s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Some real symmetric matrix has a non-real eigenvalue.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.14s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>u001 &middot; history &middot; ground truth: <b>untestable</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Python was first released publicly in 1991.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Python was first released publicly in 1991.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.14s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Python was not first released publicly in 1991.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>u002 &middot; history &middot; ground truth: <b>untestable</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>The Transformer architecture was introduced in the paper &#x27;Attention Is All You Need&#x27;.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The Transformer architecture was introduced in the paper &#x27;Attention Is All You Need&#x27;.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The Transformer architecture was not introduced in the paper &#x27;Attention Is All You Need&#x27;.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>u003 &middot; opinion &middot; ground truth: <b>untestable</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Functional programming produces more maintainable code than object-oriented programming.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Functional programming produces more maintainable code than object-oriented programming.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Functional programming does not produce more maintainable code than object-oriented programming.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><div class='card' data-v='VACUOUS' data-w='1'><div class='head'><span class='badge' style='background:#b3261e'>VACUOUS</span><span class='meta'>u004 &middot; opinion &middot; ground truth: <b>untestable</b> &middot; single-PoC baseline would say DEMONSTRATED</span><span class='wrong'>disagrees with ground truth</span></div><div class='claim'>Most machine-learning failures in production are caused by data problems rather than model problems.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Most machine-learning failures in production are caused by data problems rather than model problems.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Most machine-learning failures in production are not caused by data problems rather than model problems.</div><div><span class='st pass'>PASS</span><span class='flag'>unconditional_pass</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>mean: -0.04802827676298692
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>import numpy as np
+x = np.random.default_rng(0).normal(size=1000)
+print(&#x27;mean:&#x27;, x.mean())
+print(&#x27;RESULT: PASS&#x27;)
+</pre></details></div></div></div><script>
+function f(v,b){document.querySelectorAll('.filters button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+document.querySelectorAll('.card').forEach(c=>{c.style.display=(v==='ALL'||c.dataset.v===v||(v==='WRONG'&&c.dataset.w==='1'))?'':'none'})}
+</script></main></body></html>

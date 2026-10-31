@@ -1,0 +1,2058 @@
+<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Show, Don&#x27;t Cite: oracle prover</title><style>
+body{font:15px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:#f6f6f3;color:#1c1c1c}
+main{max-width:1100px;margin:0 auto;padding:32px 20px}
+h1{font-size:26px;margin:0 0 4px}.sub{color:#555;margin:0 0 24px}
+.tiles{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.tile{background:#fff;border:1px solid #e2e2dc;border-radius:10px;padding:12px 16px;min-width:150px}
+.tile b{display:block;font-size:22px}.tile span{color:#555;font-size:13px}
+.card{background:#fff;border:1px solid #e2e2dc;border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.badge{color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;letter-spacing:.02em}
+.meta{color:#666;font-size:13px}.wrong{color:#b3261e;font-weight:600}
+.claim{margin:8px 0 10px;font-size:16px}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:800px){.sides{grid-template-columns:1fr}}
+.side{background:#fafaf8;border:1px solid #ecece6;border-radius:8px;padding:10px}
+.side h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;color:#555;letter-spacing:.04em}
+.st{font-weight:700}.st.pass{color:#1f7a4d}.st.fail{color:#1d5fa8}.st.other{color:#6b3fa0}
+pre{white-space:pre-wrap;word-break:break-word;background:#1e1e1e;color:#e6e6e6;padding:10px;border-radius:6px;font-size:12.5px;max-height:420px;overflow:auto}
+summary{cursor:pointer;color:#333;font-size:13px;margin-top:6px}
+.flag{background:#fdecea;color:#b3261e;border-radius:4px;padding:1px 6px;font-size:12px;margin-left:6px}
+.filters{margin:0 0 16px}.filters button{border:1px solid #ccc;background:#fff;border-radius:6px;padding:4px 10px;margin:0 6px 6px 0;cursor:pointer}
+.filters button.on{background:#1c1c1c;color:#fff;border-color:#1c1c1c}
+</style></head><body><main><h1>Show, Don&#x27;t Cite: oracle prover</h1><p class='sub'>Prover: <b>oracle</b>. Every claim gets two independently generated proofs of concept: one for the claim and one for its negation. If both pass, the evidence is hollow.</p><div class='tiles'><div class='tile'><b>0%</b><span>false claims accepted, single PoC</span></div><div class='tile'><b>0%</b><span>false claims accepted, negation-checked</span></div><div class='tile'><b>100%</b><span>precision of definite verdicts</span></div><div class='tile'><b>0%</b><span>hollow (VACUOUS) evidence</span></div><div class='tile'><b>66</b><span>claims</span></div></div><div class='filters'><button onclick="f('ALL',this)" class=on>All</button><button onclick="f('WRONG',this)">Wrong</button><button onclick="f('DEMONSTRATED',this)">Demonstrated</button><button onclick="f('REFUTED',this)">Refuted</button><button onclick="f('VACUOUS',this)">Vacuous</button><button onclick="f('INCONCLUSIVE',this)">Inconclusive</button><button onclick="f('ABSTAIN',this)">Abstain</button><button onclick="f('ERROR',this)">Error</button></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c001 &middot; python &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>Python&#x27;s built-in sorted() is stable: items with equal keys keep their original relative order.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Python&#x27;s built-in sorted() is stable: items with equal keys keep their original relative order.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c001():
+    import random
+    rng = random.Random(0)
+    data = [(rng.randint(0, 3), i) for i in range(2000)]
+    out = sorted(data, key=lambda t: t[0])
+    for k in range(4):
+        idx = [i for key, i in out if key == k]
+        if idx != sorted(idx):
+            return False
+    return True
+
+
+holds = bool(c001())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Python&#x27;s built-in sorted() is not stable: items with equal keys can lose their original relative order.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c001():
+    import random
+    rng = random.Random(0)
+    data = [(rng.randint(0, 3), i) for i in range(2000)]
+    out = sorted(data, key=lambda t: t[0])
+    for k in range(4):
+        idx = [i for key, i in out if key == k]
+        if idx != sorted(idx):
+            return False
+    return True
+
+
+holds = bool(c001())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c002 &middot; numerics &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>In Python, the expression 0.1 + 0.2 == 0.3 evaluates to True.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, the expression 0.1 + 0.2 == 0.3 evaluates to True.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c002():
+    return (0.1 + 0.2 == 0.3) is True
+
+
+holds = bool(c002())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, the expression 0.1 + 0.2 == 0.3 evaluates to False.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c002():
+    return (0.1 + 0.2 == 0.3) is True
+
+
+holds = bool(c002())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c003 &middot; python &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>In Python 3.7+, iterating over a dict yields keys in insertion order.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python 3.7+, iterating over a dict yields keys in insertion order.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c003():
+    import random
+    rng = random.Random(1)
+    keys = rng.sample(range(10**6), 500)
+    d = {}
+    for k in keys:
+        d[k] = None
+    return list(d) == keys
+
+
+holds = bool(c003())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python 3.7+, iterating over a dict does not necessarily yield keys in insertion order.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c003():
+    import random
+    rng = random.Random(1)
+    keys = rng.sample(range(10**6), 500)
+    d = {}
+    for k in keys:
+        d[k] = None
+    return list(d) == keys
+
+
+holds = bool(c003())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c004 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>A mutable default argument in a Python function (e.g. def f(x=[])) is re-created on every call.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A mutable default argument in a Python function (e.g. def f(x=[])) is re-created on every call.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c004():
+    def f(x=[]):
+        x.append(1)
+        return x
+    f()
+    return len(f()) == 1
+
+
+holds = bool(c004())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>A mutable default argument in a Python function (e.g. def f(x=[])) is created once and shared across calls.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c004():
+    def f(x=[]):
+        x.append(1)
+        return x
+    f()
+    return len(f()) == 1
+
+
+holds = bool(c004())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c005 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>In CPython, for any two int objects a and b, (a is b) always gives the same result as (a == b).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In CPython, for any two int objects a and b, (a is b) always gives the same result as (a == b).</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c005():
+    pairs = [(int(str(n)), int(str(n))) for n in range(-10, 2000)]
+    return all((a is b) == (a == b) for a, b in pairs)
+
+
+holds = bool(c005())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In CPython, there exist int objects a and b for which (a is b) differs from (a == b).</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c005():
+    pairs = [(int(str(n)), int(str(n))) for n in range(-10, 2000)]
+    return all((a is b) == (a == b) for a, b in pairs)
+
+
+holds = bool(c005())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c006 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>In Python 3, round(2.5) returns 3.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python 3, round(2.5) returns 3.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c006():
+    return round(2.5) == 3
+
+
+holds = bool(c006())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python 3, round(2.5) does not return 3.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c006():
+    return round(2.5) == 3
+
+
+holds = bool(c006())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c007 &middot; python &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>Python ints have arbitrary precision: arithmetic on very large ints (e.g. 2**1000) is exact and does not overflow.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Python ints have arbitrary precision: arithmetic on very large ints (e.g. 2**1000) is exact and does not overflow.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c007():
+    x = 2 ** 1000
+    return (x + 1) - x == 1 and (x * x) // x == x and len(str(x)) == 302
+
+
+holds = bool(c007())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Python ints overflow or lose precision for very large values such as 2**1000.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c007():
+    x = 2 ** 1000
+    return (x + 1) - x == 1 and (x * x) // x == x and len(str(x)) == 302
+
+
+holds = bool(c007())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c008 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>list.copy() makes a deep copy, so modifying a nested list inside the copy does not affect the original.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>list.copy() makes a deep copy, so modifying a nested list inside the copy does not affect the original.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c008():
+    a = [[1, 2], [3]]
+    b = a.copy()
+    b[0].append(99)
+    return a == [[1, 2], [3]]
+
+
+holds = bool(c008())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>list.copy() makes a shallow copy, so modifying a nested list inside the copy also affects the original.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c008():
+    a = [[1, 2], [3]]
+    b = a.copy()
+    b[0].append(99)
+    return a == [[1, 2], [3]]
+
+
+holds = bool(c008())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c009 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>In CPython, iterating over a set always yields elements in the order they were inserted.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In CPython, iterating over a set always yields elements in the order they were inserted.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c009():
+    import random
+    rng = random.Random(2)
+    for _ in range(200):
+        seq = rng.sample(range(100), 10)
+        s = set()
+        for v in seq:
+            s.add(v)
+        if list(s) != seq:
+            return False
+    return True
+
+
+holds = bool(c009())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In CPython, iterating over a set does not always yield elements in the order they were inserted.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c009():
+    import random
+    rng = random.Random(2)
+    for _ in range(200):
+        seq = rng.sample(range(100), 10)
+        s = set()
+        for v in seq:
+            s.add(v)
+        if list(s) != seq:
+            return False
+    return True
+
+
+holds = bool(c009())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c010 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>In Python, -7 // 2 evaluates to -3.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, -7 // 2 evaluates to -3.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c010():
+    return -7 // 2 == -3
+
+
+holds = bool(c010())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, -7 // 2 does not evaluate to -3.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c010():
+    return -7 // 2 == -3
+
+
+holds = bool(c010())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c011 &middot; python &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>In Python, -7 % 3 evaluates to 2.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, -7 % 3 evaluates to 2.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c011():
+    return -7 % 3 == 2
+
+
+holds = bool(c011())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, -7 % 3 does not evaluate to 2.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c011():
+    return -7 % 3 == 2
+
+
+holds = bool(c011())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c012 &middot; python &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>In Python, bool is a subclass of int.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, bool is a subclass of int.</div><div><span class='st pass'>PASS</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c012():
+    return issubclass(bool, int)
+
+
+holds = bool(c012())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, bool is not a subclass of int.</div><div><span class='st fail'>FAIL</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c012():
+    return issubclass(bool, int)
+
+
+holds = bool(c012())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c013 &middot; numerics &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>In Python, float(&#x27;nan&#x27;) == float(&#x27;nan&#x27;) evaluates to True.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, float(&#x27;nan&#x27;) == float(&#x27;nan&#x27;) evaluates to True.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c013():
+    return float(&quot;nan&quot;) == float(&quot;nan&quot;)
+
+
+holds = bool(c013())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, float(&#x27;nan&#x27;) == float(&#x27;nan&#x27;) evaluates to False.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c013():
+    return float(&quot;nan&quot;) == float(&quot;nan&quot;)
+
+
+holds = bool(c013())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c014 &middot; numerics &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>math.isclose(0.1 + 0.2, 0.3) returns True in Python with default tolerances.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>math.isclose(0.1 + 0.2, 0.3) returns True in Python with default tolerances.</div><div><span class='st pass'>PASS</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c014():
+    import math
+    return math.isclose(0.1 + 0.2, 0.3)
+
+
+holds = bool(c014())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>math.isclose(0.1 + 0.2, 0.3) returns False in Python with default tolerances.</div><div><span class='st fail'>FAIL</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c014():
+    import math
+    return math.isclose(0.1 + 0.2, 0.3)
+
+
+holds = bool(c014())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c015 &middot; numerics &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>IEEE-754 double-precision addition is associative: (a + b) + c always equals a + (b + c).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>IEEE-754 double-precision addition is associative: (a + b) + c always equals a + (b + c).</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c015():
+    import random
+    rng = random.Random(3)
+    for _ in range(10000):
+        a, b, c = rng.random(), rng.random(), rng.random()
+        if (a + b) + c != a + (b + c):
+            return False
+    return True
+
+
+holds = bool(c015())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>IEEE-754 double-precision addition is not associative: (a + b) + c can differ from a + (b + c).</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c015():
+    import random
+    rng = random.Random(3)
+    for _ in range(10000):
+        a, b, c = rng.random(), rng.random(), rng.random()
+        if (a + b) + c != a + (b + c):
+            return False
+    return True
+
+
+holds = bool(c015())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c016 &middot; numerics &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>The integer 2**53 + 1 can be represented exactly as an IEEE-754 double.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The integer 2**53 + 1 can be represented exactly as an IEEE-754 double.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c016():
+    return int(float(2 ** 53 + 1)) == 2 ** 53 + 1
+
+
+holds = bool(c016())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The integer 2**53 + 1 cannot be represented exactly as an IEEE-754 double.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c016():
+    return int(float(2 ** 53 + 1)) == 2 ** 53 + 1
+
+
+holds = bool(c016())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c017 &middot; numerics &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>For some lists of floats, Python&#x27;s built-in sum() and math.fsum() return different results.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For some lists of floats, Python&#x27;s built-in sum() and math.fsum() return different results.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c017():
+    # Note: the textbook example sum([0.1]*10) != 1.0 no longer works on
+    # Python &gt;= 3.12, whose sum() uses compensated (Neumaier) summation for
+    # floats. sum() is still not exactly rounded, so differences remain.
+    import math
+    import random
+    rng = random.Random(1)
+    for _ in range(200000):
+        v = [rng.choice([1.0, -1.0]) * 2.0 ** rng.randint(-60, 60) for _ in range(6)]
+        if sum(v) != math.fsum(v):
+            return True
+    return False
+
+
+holds = bool(c017())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Python&#x27;s built-in sum() and math.fsum() return the same result for every list of floats.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c017():
+    # Note: the textbook example sum([0.1]*10) != 1.0 no longer works on
+    # Python &gt;= 3.12, whose sum() uses compensated (Neumaier) summation for
+    # floats. sum() is still not exactly rounded, so differences remain.
+    import math
+    import random
+    rng = random.Random(1)
+    for _ in range(200000):
+        v = [rng.choice([1.0, -1.0]) * 2.0 ** rng.randint(-60, 60) for _ in range(6)]
+        if sum(v) != math.fsum(v):
+            return True
+    return False
+
+
+holds = bool(c017())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c018 &middot; numerics &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>In float64, the one-pass variance formula mean(x^2) - mean(x)^2 has a relative error above 1% on the data [1e9+4, 1e9+7, 1e9+13, 1e9+16].</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In float64, the one-pass variance formula mean(x^2) - mean(x)^2 has a relative error above 1% on the data [1e9+4, 1e9+7, 1e9+13, 1e9+16].</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c018():
+    xs = [1e9 + 4, 1e9 + 7, 1e9 + 13, 1e9 + 16]
+    n = len(xs)
+    naive = sum(x * x for x in xs) / n - (sum(xs) / n) ** 2
+    mean = sum(xs) / n
+    exact = sum((x - mean) ** 2 for x in xs) / n  # 22.5
+    return abs(naive - exact) / exact &gt; 0.01
+
+
+holds = bool(c018())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In float64, the one-pass variance formula mean(x^2) - mean(x)^2 has a relative error of at most 1% on the data [1e9+4, 1e9+7, 1e9+13, 1e9+16].</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c018():
+    xs = [1e9 + 4, 1e9 + 7, 1e9 + 13, 1e9 + 16]
+    n = len(xs)
+    naive = sum(x * x for x in xs) / n - (sum(xs) / n) ** 2
+    mean = sum(xs) / n
+    exact = sum((x - mean) ** 2 for x in xs) / n  # 22.5
+    return abs(naive - exact) / exact &gt; 0.01
+
+
+holds = bool(c018())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c019 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>Quicksort that always picks the first element as pivot performs a quadratic number of comparisons on already-sorted input.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Quicksort that always picks the first element as pivot performs a quadratic number of comparisons on already-sorted input.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c019():
+    def count(n):
+        a = list(range(n))
+        comps = 0
+        stack = [(0, n - 1)]
+        while stack:
+            lo, hi = stack.pop()
+            if lo &gt;= hi:
+                continue
+            pivot = a[lo]
+            i = lo
+            for j in range(lo + 1, hi + 1):
+                comps += 1
+                if a[j] &lt; pivot:
+                    i += 1
+                    a[i], a[j] = a[j], a[i]
+            a[lo], a[i] = a[i], a[lo]
+            stack.append((lo, i - 1))
+            stack.append((i + 1, hi))
+        return comps
+    c1, c2 = count(400), count(800)
+    return c1 == 400 * 399 // 2 and 3.8 &lt; c2 / c1 &lt; 4.2
+
+
+holds = bool(c019())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Quicksort that always picks the first element as pivot performs a sub-quadratic number of comparisons on already-sorted input.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c019():
+    def count(n):
+        a = list(range(n))
+        comps = 0
+        stack = [(0, n - 1)]
+        while stack:
+            lo, hi = stack.pop()
+            if lo &gt;= hi:
+                continue
+            pivot = a[lo]
+            i = lo
+            for j in range(lo + 1, hi + 1):
+                comps += 1
+                if a[j] &lt; pivot:
+                    i += 1
+                    a[i], a[j] = a[j], a[i]
+            a[lo], a[i] = a[i], a[lo]
+            stack.append((lo, i - 1))
+            stack.append((i + 1, hi))
+        return comps
+    c1, c2 = count(400), count(800)
+    return c1 == 400 * 399 // 2 and 3.8 &lt; c2 / c1 &lt; 4.2
+
+
+holds = bool(c019())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c020 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>Binary search can fail to find an element that is present if the input list is not sorted.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Binary search can fail to find an element that is present if the input list is not sorted.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c020():
+    def bsearch(a, x):
+        lo, hi = 0, len(a)
+        while lo &lt; hi:
+            mid = (lo + hi) // 2
+            if a[mid] &lt; x:
+                lo = mid + 1
+            else:
+                hi = mid
+        return lo &lt; len(a) and a[lo] == x
+    return bsearch([3, 1, 2], 3) is False
+
+
+holds = bool(c020())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Binary search always finds an element that is present, even if the input list is not sorted.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c020():
+    def bsearch(a, x):
+        lo, hi = 0, len(a)
+        while lo &lt; hi:
+            mid = (lo + hi) // 2
+            if a[mid] &lt; x:
+                lo = mid + 1
+            else:
+                hi = mid
+        return lo &lt; len(a) and a[lo] == x
+    return bsearch([3, 1, 2], 3) is False
+
+
+holds = bool(c020())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c021 &middot; algorithms &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>Dijkstra&#x27;s algorithm, in the form where a settled vertex is never revisited, always returns correct shortest-path distances on graphs with negative edge weights (but no negative cycles).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Dijkstra&#x27;s algorithm, in the form where a settled vertex is never revisited, always returns correct shortest-path distances on graphs with negative edge weights (but no negative cycles).</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c021():
+    import heapq
+    graph = {&quot;A&quot;: [(&quot;B&quot;, 2), (&quot;C&quot;, 3)], &quot;B&quot;: [], &quot;C&quot;: [(&quot;B&quot;, -2)]}
+
+    def dijkstra(src):
+        dist = {v: float(&quot;inf&quot;) for v in graph}
+        dist[src] = 0
+        settled = set()
+        pq = [(0, src)]
+        while pq:
+            d, u = heapq.heappop(pq)
+            if u in settled:
+                continue
+            settled.add(u)
+            for v, w in graph[u]:
+                if v not in settled and d + w &lt; dist[v]:
+                    dist[v] = d + w
+                    heapq.heappush(pq, (dist[v], v))
+        return dist
+
+    def bellman_ford(src):
+        dist = {v: float(&quot;inf&quot;) for v in graph}
+        dist[src] = 0
+        for _ in range(len(graph) - 1):
+            for u in graph:
+                for v, w in graph[u]:
+                    if dist[u] + w &lt; dist[v]:
+                        dist[v] = dist[u] + w
+        return dist
+    return dijkstra(&quot;A&quot;) == bellman_ford(&quot;A&quot;)
+
+
+holds = bool(c021())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Dijkstra&#x27;s algorithm, in the form where a settled vertex is never revisited, can return incorrect shortest-path distances on graphs with negative edge weights (but no negative cycles).</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c021():
+    import heapq
+    graph = {&quot;A&quot;: [(&quot;B&quot;, 2), (&quot;C&quot;, 3)], &quot;B&quot;: [], &quot;C&quot;: [(&quot;B&quot;, -2)]}
+
+    def dijkstra(src):
+        dist = {v: float(&quot;inf&quot;) for v in graph}
+        dist[src] = 0
+        settled = set()
+        pq = [(0, src)]
+        while pq:
+            d, u = heapq.heappop(pq)
+            if u in settled:
+                continue
+            settled.add(u)
+            for v, w in graph[u]:
+                if v not in settled and d + w &lt; dist[v]:
+                    dist[v] = d + w
+                    heapq.heappush(pq, (dist[v], v))
+        return dist
+
+    def bellman_ford(src):
+        dist = {v: float(&quot;inf&quot;) for v in graph}
+        dist[src] = 0
+        for _ in range(len(graph) - 1):
+            for u in graph:
+                for v, w in graph[u]:
+                    if dist[u] + w &lt; dist[v]:
+                        dist[v] = dist[u] + w
+        return dist
+    return dijkstra(&quot;A&quot;) == bellman_ford(&quot;A&quot;)
+
+
+holds = bool(c021())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c022 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>Bubble sort with an early-exit flag performs only a linear number of comparisons on already-sorted input.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Bubble sort with an early-exit flag performs only a linear number of comparisons on already-sorted input.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c022():
+    def comps(a):
+        a = list(a)
+        c = 0
+        n = len(a)
+        for i in range(n):
+            swapped = False
+            for j in range(n - 1 - i):
+                c += 1
+                if a[j] &gt; a[j + 1]:
+                    a[j], a[j + 1] = a[j + 1], a[j]
+                    swapped = True
+            if not swapped:
+                break
+        return c
+    return comps(range(1000)) == 999 and comps(range(4000)) == 3999
+
+
+holds = bool(c022())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Bubble sort with an early-exit flag performs a super-linear number of comparisons on already-sorted input.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c022():
+    def comps(a):
+        a = list(a)
+        c = 0
+        n = len(a)
+        for i in range(n):
+            swapped = False
+            for j in range(n - 1 - i):
+                c += 1
+                if a[j] &gt; a[j + 1]:
+                    a[j], a[j + 1] = a[j + 1], a[j]
+                    swapped = True
+            if not swapped:
+                break
+        return c
+    return comps(range(1000)) == 999 and comps(range(4000)) == 3999
+
+
+holds = bool(c022())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c023 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>In Python, testing membership of an absent value is faster in a set than in a list when both hold 10,000 integers.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In Python, testing membership of an absent value is faster in a set than in a list when both hold 10,000 integers.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.14s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c023():
+    import timeit
+    data = list(range(10000))
+    s = set(data)
+    t_list = timeit.timeit(lambda: -1 in data, number=2000)
+    t_set = timeit.timeit(lambda: -1 in s, number=2000)
+    return t_set &lt; t_list
+
+
+holds = bool(c023())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In Python, testing membership of an absent value is not faster in a set than in a list when both hold 10,000 integers.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.14s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c023():
+    import timeit
+    data = list(range(10000))
+    s = set(data)
+    t_list = timeit.timeit(lambda: -1 in data, number=2000)
+    t_set = timeit.timeit(lambda: -1 in s, number=2000)
+    return t_set &lt; t_list
+
+
+holds = bool(c023())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c024 &middot; python &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>Python&#x27;s heapq module implements a max-heap by default, so heap[0] is the largest element.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Python&#x27;s heapq module implements a max-heap by default, so heap[0] is the largest element.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c024():
+    import heapq
+    h = [3, 1, 2, 9, 5]
+    heapq.heapify(h)
+    return h[0] == 9
+
+
+holds = bool(c024())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Python&#x27;s heapq module implements a min-heap by default, so heap[0] is the smallest element.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c024():
+    import heapq
+    h = [3, 1, 2, 9, 5]
+    heapq.heapify(h)
+    return h[0] == 9
+
+
+holds = bool(c024())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c025 &middot; algorithms &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>For coin denominations {1, 3, 4}, the greedy algorithm (always take the largest coin that fits) uses the minimum number of coins for every amount.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For coin denominations {1, 3, 4}, the greedy algorithm (always take the largest coin that fits) uses the minimum number of coins for every amount.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c025():
+    coins = [4, 3, 1]
+
+    def greedy(n):
+        c = 0
+        for coin in coins:
+            c += n // coin
+            n %= coin
+        return c
+
+    def best(n):
+        dp = [0] + [10 ** 9] * n
+        for v in range(1, n + 1):
+            dp[v] = min(dp[v - c] + 1 for c in coins if c &lt;= v)
+        return dp[n]
+    return all(greedy(n) == best(n) for n in range(1, 101))
+
+
+holds = bool(c025())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For coin denominations {1, 3, 4}, the greedy algorithm (always take the largest coin that fits) does not use the minimum number of coins for some amount.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c025():
+    coins = [4, 3, 1]
+
+    def greedy(n):
+        c = 0
+        for coin in coins:
+            c += n // coin
+            n %= coin
+        return c
+
+    def best(n):
+        dp = [0] + [10 ** 9] * n
+        for v in range(1, n + 1):
+            dp[v] = min(dp[v - c] + 1 for c in coins if c &lt;= v)
+        return dp[n]
+    return all(greedy(n) == best(n) for n in range(1, 101))
+
+
+holds = bool(c025())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c026 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>For coin denominations {1, 5, 10, 25}, the greedy algorithm uses the minimum number of coins for every amount from 1 to 1000.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For coin denominations {1, 5, 10, 25}, the greedy algorithm uses the minimum number of coins for every amount from 1 to 1000.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c026():
+    coins = [25, 10, 5, 1]
+    N = 1000
+    dp = [0] + [10 ** 9] * N
+    for v in range(1, N + 1):
+        dp[v] = min(dp[v - c] + 1 for c in coins if c &lt;= v)
+
+    def greedy(n):
+        c = 0
+        for coin in coins:
+            c += n // coin
+            n %= coin
+        return c
+    return all(greedy(n) == dp[n] for n in range(1, N + 1))
+
+
+holds = bool(c026())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For coin denominations {1, 5, 10, 25}, the greedy algorithm uses more than the minimum number of coins for some amount from 1 to 1000.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c026():
+    coins = [25, 10, 5, 1]
+    N = 1000
+    dp = [0] + [10 ** 9] * N
+    for v in range(1, N + 1):
+        dp[v] = min(dp[v - c] + 1 for c in coins if c &lt;= v)
+
+    def greedy(n):
+        c = 0
+        for coin in coins:
+            c += n // coin
+            n %= coin
+        return c
+    return all(greedy(n) == dp[n] for n in range(1, N + 1))
+
+
+holds = bool(c026())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c027 &middot; algorithms &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>The 0/1 knapsack problem is always solved optimally by greedily taking items in decreasing order of value-to-weight ratio.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The 0/1 knapsack problem is always solved optimally by greedily taking items in decreasing order of value-to-weight ratio.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c027():
+    items = [(10, 60), (20, 100), (30, 120)]  # (weight, value)
+    cap = 50
+    order = sorted(items, key=lambda t: t[1] / t[0], reverse=True)
+    w = v = 0
+    for wi, vi in order:
+        if w + wi &lt;= cap:
+            w += wi
+            v += vi
+    dp = [0] * (cap + 1)
+    for wi, vi in items:
+        for c in range(cap, wi - 1, -1):
+            dp[c] = max(dp[c], dp[c - wi] + vi)
+    return v == dp[cap]
+
+
+holds = bool(c027())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Greedily taking items in decreasing order of value-to-weight ratio does not always solve the 0/1 knapsack problem optimally.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c027():
+    items = [(10, 60), (20, 100), (30, 120)]  # (weight, value)
+    cap = 50
+    order = sorted(items, key=lambda t: t[1] / t[0], reverse=True)
+    w = v = 0
+    for wi, vi in order:
+        if w + wi &lt;= cap:
+            w += wi
+            v += vi
+    dp = [0] * (cap + 1)
+    for wi, vi in items:
+        for c in range(cap, wi - 1, -1):
+            dp[c] = max(dp[c], dp[c - wi] + vi)
+    return v == dp[cap]
+
+
+holds = bool(c027())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c028 &middot; algorithms &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>Computing the n-th Fibonacci number with plain recursion (no memoization) makes a number of calls that grows exponentially in n.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Computing the n-th Fibonacci number with plain recursion (no memoization) makes a number of calls that grows exponentially in n.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.07s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c028():
+    def calls(n):
+        cnt = [0]
+
+        def fib(k):
+            cnt[0] += 1
+            return k if k &lt; 2 else fib(k - 1) + fib(k - 2)
+        fib(n)
+        return cnt[0]
+    r1 = calls(20) / calls(15)
+    r2 = calls(25) / calls(20)
+    # Exponential growth: a constant (~phi**5 = 11.09) factor per +5 in n.
+    return r1 &gt; 10 and r2 &gt; 10 and abs(r1 - r2) / r2 &lt; 0.05
+
+
+holds = bool(c028())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Computing the n-th Fibonacci number with plain recursion (no memoization) makes a number of calls that grows only polynomially in n.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.07s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c028():
+    def calls(n):
+        cnt = [0]
+
+        def fib(k):
+            cnt[0] += 1
+            return k if k &lt; 2 else fib(k - 1) + fib(k - 2)
+        fib(n)
+        return cnt[0]
+    r1 = calls(20) / calls(15)
+    r2 = calls(25) / calls(20)
+    # Exponential growth: a constant (~phi**5 = 11.09) factor per +5 in n.
+    return r1 &gt; 10 and r2 &gt; 10 and abs(r1 - r2) / r2 &lt; 0.05
+
+
+holds = bool(c028())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c029 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>In a group of 23 people with uniformly random birthdays over 365 days, the probability that at least two share a birthday exceeds 50%.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In a group of 23 people with uniformly random birthdays over 365 days, the probability that at least two share a birthday exceeds 50%.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c029():
+    p_distinct = 1.0
+    for i in range(23):
+        p_distinct *= (365 - i) / 365
+    return 1 - p_distinct &gt; 0.5
+
+
+holds = bool(c029())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In a group of 23 people with uniformly random birthdays over 365 days, the probability that at least two share a birthday is at most 50%.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c029():
+    p_distinct = 1.0
+    for i in range(23):
+        p_distinct *= (365 - i) / 365
+    return 1 - p_distinct &gt; 0.5
+
+
+holds = bool(c029())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c030 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>In the Monty Hall problem, a contestant who always switches wins about 2/3 of the time.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>In the Monty Hall problem, a contestant who always switches wins about 2/3 of the time.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.48s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c030():
+    import random
+    rng = random.Random(4)
+    wins = 0
+    trials = 200000
+    for _ in range(trials):
+        car = rng.randrange(3)
+        pick = rng.randrange(3)
+        opened = next(d for d in range(3) if d != pick and d != car)
+        switched = next(d for d in range(3) if d != pick and d != opened)
+        wins += switched == car
+    return abs(wins / trials - 2 / 3) &lt; 0.01
+
+
+holds = bool(c030())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>In the Monty Hall problem, a contestant who always switches does not win about 2/3 of the time.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.49s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c030():
+    import random
+    rng = random.Random(4)
+    wins = 0
+    trials = 200000
+    for _ in range(trials):
+        car = rng.randrange(3)
+        pick = rng.randrange(3)
+        opened = next(d for d in range(3) if d != pick and d != car)
+        switched = next(d for d in range(3) if d != pick and d != opened)
+        wins += switched == car
+    return abs(wins / trials - 2 / 3) &lt; 0.01
+
+
+holds = bool(c030())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c031 &middot; probability &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>The sample mean of i.i.d. standard Cauchy samples concentrates around 0 as the sample size grows.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The sample mean of i.i.d. standard Cauchy samples concentrates around 0 as the sample size grows.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.38s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c031():
+    import numpy as np
+    rng = np.random.default_rng(5)
+
+    def iqr_of_means(n, reps=400):
+        m = rng.standard_cauchy((reps, n)).mean(axis=1)
+        q75, q25 = np.percentile(m, [75, 25])
+        return q75 - q25
+    small, large = iqr_of_means(10), iqr_of_means(10000)
+    # If means concentrated, IQR would shrink by ~sqrt(1000) ~ 30x.
+    return large &lt; 0.25 * small
+
+
+holds = bool(c031())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The sample mean of i.i.d. standard Cauchy samples does not concentrate around 0 as the sample size grows.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.24s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c031():
+    import numpy as np
+    rng = np.random.default_rng(5)
+
+    def iqr_of_means(n, reps=400):
+        m = rng.standard_cauchy((reps, n)).mean(axis=1)
+        q75, q25 = np.percentile(m, [75, 25])
+        return q75 - q25
+    small, large = iqr_of_means(10), iqr_of_means(10000)
+    # If means concentrated, IQR would shrink by ~sqrt(1000) ~ 30x.
+    return large &lt; 0.25 * small
+
+
+holds = bool(c031())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c032 &middot; probability &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>If two random variables have Pearson correlation 0, they are independent.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>If two random variables have Pearson correlation 0, they are independent.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c032():
+    import numpy as np
+    rng = np.random.default_rng(6)
+    x = rng.uniform(-1, 1, 200000)
+    y = x ** 2
+    r = np.corrcoef(x, y)[0, 1]
+    # y = x**2 is a deterministic function of x, so they are dependent:
+    # knowing |x| &gt; 0.5 shifts the mean of y substantially. Yet r ~ 0.
+    dependent = abs(y[np.abs(x) &gt; 0.5].mean() - y[np.abs(x) &lt; 0.5].mean()) &gt; 0.1
+    zero_corr = abs(r) &lt; 0.01
+    return not (zero_corr and dependent)
+
+
+holds = bool(c032())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Two random variables can have Pearson correlation 0 and still be dependent.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c032():
+    import numpy as np
+    rng = np.random.default_rng(6)
+    x = rng.uniform(-1, 1, 200000)
+    y = x ** 2
+    r = np.corrcoef(x, y)[0, 1]
+    # y = x**2 is a deterministic function of x, so they are dependent:
+    # knowing |x| &gt; 0.5 shifts the mean of y substantially. Yet r ~ 0.
+    dependent = abs(y[np.abs(x) &gt; 0.5].mean() - y[np.abs(x) &lt; 0.5].mean()) &gt; 0.1
+    zero_corr = abs(r) &lt; 0.01
+    return not (zero_corr and dependent)
+
+
+holds = bool(c032())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c033 &middot; probability &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>The average of two independent Uniform(0,1) random variables is itself uniformly distributed on (0,1).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The average of two independent Uniform(0,1) random variables is itself uniformly distributed on (0,1).</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c033():
+    import numpy as np
+    rng = np.random.default_rng(7)
+    m = (rng.uniform(size=400000) + rng.uniform(size=400000)) / 2
+    frac_low = np.mean(m &lt; 0.1)  # uniform would give 0.10; triangular gives 0.02
+    return abs(frac_low - 0.1) &lt; 0.01
+
+
+holds = bool(c033())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The average of two independent Uniform(0,1) random variables is not uniformly distributed on (0,1).</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c033():
+    import numpy as np
+    rng = np.random.default_rng(7)
+    m = (rng.uniform(size=400000) + rng.uniform(size=400000)) / 2
+    frac_low = np.mean(m &lt; 0.1)  # uniform would give 0.10; triangular gives 0.02
+    return abs(frac_low - 0.1) &lt; 0.01
+
+
+holds = bool(c033())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c034 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>The sum of 30 i.i.d. Exponential(1) random variables has skewness below 0.5.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The sum of 30 i.i.d. Exponential(1) random variables has skewness below 0.5.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.38s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c034():
+    import numpy as np
+    rng = np.random.default_rng(8)
+    s = rng.exponential(1.0, (200000, 30)).sum(axis=1)
+    z = (s - s.mean()) / s.std()
+    skew = np.mean(z ** 3)  # theory: 2/sqrt(30) = 0.365
+    return skew &lt; 0.5
+
+
+holds = bool(c034())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The sum of 30 i.i.d. Exponential(1) random variables has skewness of at least 0.5.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.23s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c034():
+    import numpy as np
+    rng = np.random.default_rng(8)
+    s = rng.exponential(1.0, (200000, 30)).sum(axis=1)
+    z = (s - s.mean()) / s.std()
+    skew = np.mean(z ** 3)  # theory: 2/sqrt(30) = 0.365
+    return skew &lt; 0.5
+
+
+holds = bool(c034())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c035 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>A bootstrap sample (n draws with replacement from n items, n large) leaves out about 36.8% of the items on average.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A bootstrap sample (n draws with replacement from n items, n large) leaves out about 36.8% of the items on average.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.13s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c035():
+    import numpy as np
+    rng = np.random.default_rng(9)
+    n, reps = 2000, 300
+    left_out = [1 - len(np.unique(rng.integers(0, n, n))) / n for _ in range(reps)]
+    return abs(np.mean(left_out) - 0.368) &lt; 0.01
+
+
+holds = bool(c035())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>A bootstrap sample (n draws with replacement from n items, n large) does not leave out about 36.8% of the items on average.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c035():
+    import numpy as np
+    rng = np.random.default_rng(9)
+    n, reps = 2000, 300
+    left_out = [1 - len(np.unique(rng.integers(0, n, n))) / n for _ in range(reps)]
+    return abs(np.mean(left_out) - 0.368) &lt; 0.01
+
+
+holds = bool(c035())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c036 &middot; probability &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>Running 20 independent hypothesis tests at alpha = 0.05 when all null hypotheses are true gives a family-wise error rate below 10%.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Running 20 independent hypothesis tests at alpha = 0.05 when all null hypotheses are true gives a family-wise error rate below 10%.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c036():
+    import numpy as np
+    exact = 1 - 0.95 ** 20
+    rng = np.random.default_rng(10)
+    p = rng.uniform(size=(100000, 20))  # p-values are uniform under the null
+    sim = np.mean((p &lt; 0.05).any(axis=1))
+    return exact &lt; 0.10 and sim &lt; 0.10
+
+
+holds = bool(c036())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Running 20 independent hypothesis tests at alpha = 0.05 when all null hypotheses are true gives a family-wise error rate of at least 10%.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c036():
+    import numpy as np
+    exact = 1 - 0.95 ** 20
+    rng = np.random.default_rng(10)
+    p = rng.uniform(size=(100000, 20))  # p-values are uniform under the null
+    sim = np.mean((p &lt; 0.05).any(axis=1))
+    return exact &lt; 0.10 and sim &lt; 0.10
+
+
+holds = bool(c036())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c037 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>A treatment can have a higher success rate than another in every subgroup and yet a lower success rate overall (Simpson&#x27;s paradox).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A treatment can have a higher success rate than another in every subgroup and yet a lower success rate overall (Simpson&#x27;s paradox).</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c037():
+    # Kidney-stone data (Charig et al. 1986): (successes, total)
+    a = {&quot;small&quot;: (81, 87), &quot;large&quot;: (192, 263)}
+    b = {&quot;small&quot;: (234, 270), &quot;large&quot;: (55, 80)}
+    better_each = all(a[g][0] / a[g][1] &gt; b[g][0] / b[g][1] for g in a)
+    a_all = sum(s for s, _ in a.values()) / sum(t for _, t in a.values())
+    b_all = sum(s for s, _ in b.values()) / sum(t for _, t in b.values())
+    return better_each and a_all &lt; b_all
+
+
+holds = bool(c037())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>If a treatment has a higher success rate than another in every subgroup, it must also have a higher success rate overall.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c037():
+    # Kidney-stone data (Charig et al. 1986): (successes, total)
+    a = {&quot;small&quot;: (81, 87), &quot;large&quot;: (192, 263)}
+    b = {&quot;small&quot;: (234, 270), &quot;large&quot;: (55, 80)}
+    better_each = all(a[g][0] / a[g][1] &gt; b[g][0] / b[g][1] for g in a)
+    a_all = sum(s for s, _ in a.values()) / sum(t for _, t in a.values())
+    b_all = sum(s for s, _ in b.values()) / sum(t for _, t in b.values())
+    return better_each and a_all &lt; b_all
+
+
+holds = bool(c037())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c038 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>For a set of numbers, the median minimises the mean absolute deviation sum(|x - c|)/n over all choices of c.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For a set of numbers, the median minimises the mean absolute deviation sum(|x - c|)/n over all choices of c.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.18s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c038():
+    import numpy as np
+    rng = np.random.default_rng(11)
+    for _ in range(50):
+        x = rng.standard_exponential(101)
+        med = np.median(x)
+        grid = np.linspace(x.min(), x.max(), 2001)
+        mad = np.abs(x[None, :] - grid[:, None]).mean(axis=1)
+        if np.abs(x - med).mean() &gt; mad.min() + 1e-12:
+            return False
+    return True
+
+
+holds = bool(c038())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For some set of numbers, a value other than the median gives a strictly lower mean absolute deviation sum(|x - c|)/n.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.18s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c038():
+    import numpy as np
+    rng = np.random.default_rng(11)
+    for _ in range(50):
+        x = rng.standard_exponential(101)
+        med = np.median(x)
+        grid = np.linspace(x.min(), x.max(), 2001)
+        mad = np.abs(x[None, :] - grid[:, None]).mean(axis=1)
+        if np.abs(x - med).mean() &gt; mad.min() + 1e-12:
+            return False
+    return True
+
+
+holds = bool(c038())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c039 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>Standardising the features (z-scoring) changes the predictions of an ordinary least-squares linear regression with an intercept.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Standardising the features (z-scoring) changes the predictions of an ordinary least-squares linear regression with an intercept.</div><div><span class='st fail'>FAIL</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c039():
+    import numpy as np
+    rng = np.random.default_rng(12)
+    X = rng.normal(5, 3, (200, 4)) * np.array([1, 10, 0.1, 100])
+    y = X @ np.array([1.0, -0.2, 3.0, 0.01]) + rng.normal(0, 1, 200)
+
+    def fit_predict(Xtr):
+        A = np.c_[np.ones(len(Xtr)), Xtr]
+        coef, *_ = np.linalg.lstsq(A, y, rcond=None)
+        return A @ coef
+    Z = (X - X.mean(0)) / X.std(0)
+    return not np.allclose(fit_predict(X), fit_predict(Z), atol=1e-6)
+
+
+holds = bool(c039())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Standardising the features (z-scoring) does not change the predictions of an ordinary least-squares linear regression with an intercept.</div><div><span class='st pass'>PASS</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c039():
+    import numpy as np
+    rng = np.random.default_rng(12)
+    X = rng.normal(5, 3, (200, 4)) * np.array([1, 10, 0.1, 100])
+    y = X @ np.array([1.0, -0.2, 3.0, 0.01]) + rng.normal(0, 1, 200)
+
+    def fit_predict(Xtr):
+        A = np.c_[np.ones(len(Xtr)), Xtr]
+        coef, *_ = np.linalg.lstsq(A, y, rcond=None)
+        return A @ coef
+    Z = (X - X.mean(0)) / X.std(0)
+    return not np.allclose(fit_predict(X), fit_predict(Z), atol=1e-6)
+
+
+holds = bool(c039())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c040 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>Rescaling a single feature can change the predictions of a k-nearest-neighbours classifier using Euclidean distance.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Rescaling a single feature can change the predictions of a k-nearest-neighbours classifier using Euclidean distance.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c040():
+    import numpy as np
+    Xtr = np.array([[0.0, 10.0], [1.0, 0.0]])
+    ytr = np.array([0, 1])
+    q = np.array([0.0, 0.0])
+
+    def knn1(X, query):
+        return ytr[np.argmin(np.linalg.norm(X - query, axis=1))]
+    before = knn1(Xtr, q)
+    scale = np.array([1.0, 0.01])
+    after = knn1(Xtr * scale, q * scale)
+    return before != after
+
+
+holds = bool(c040())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Rescaling a single feature can never change the predictions of a k-nearest-neighbours classifier using Euclidean distance.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c040():
+    import numpy as np
+    Xtr = np.array([[0.0, 10.0], [1.0, 0.0]])
+    ytr = np.array([0, 1])
+    q = np.array([0.0, 0.0])
+
+    def knn1(X, query):
+        return ytr[np.argmin(np.linalg.norm(X - query, axis=1))]
+    before = knn1(Xtr, q)
+    scale = np.array([1.0, 0.01])
+    after = knn1(Xtr * scale, q * scale)
+    return before != after
+
+
+holds = bool(c040())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c041 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>A linear classifier (a single-layer perceptron, sign(w.x + b)) can perfectly classify the XOR problem.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A linear classifier (a single-layer perceptron, sign(w.x + b)) can perfectly classify the XOR problem.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.19s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c041():
+    import numpy as np
+    X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=float)
+    y = np.array([0, 1, 1, 0])
+    # Analytic: need b&lt;=0, w1+b&gt;0, w2+b&gt;0, w1+w2+b&lt;=0. Adding the middle two
+    # gives w1+w2+2b&gt;0, i.e. w1+w2+b &gt; -b &gt;= 0: contradiction. Confirm by search.
+    rng = np.random.default_rng(13)
+    W = rng.normal(0, 5, (500000, 3))
+    pred = (X @ W[:, :2].T + W[:, 2]) &gt; 0
+    return bool((pred == y[:, None].astype(bool)).all(axis=0).any())
+
+
+holds = bool(c041())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>No linear classifier (single-layer perceptron, sign(w.x + b)) can perfectly classify the XOR problem.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.19s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c041():
+    import numpy as np
+    X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=float)
+    y = np.array([0, 1, 1, 0])
+    # Analytic: need b&lt;=0, w1+b&gt;0, w2+b&gt;0, w1+w2+b&lt;=0. Adding the middle two
+    # gives w1+w2+2b&gt;0, i.e. w1+w2+b &gt; -b &gt;= 0: contradiction. Confirm by search.
+    rng = np.random.default_rng(13)
+    W = rng.normal(0, 5, (500000, 3))
+    pred = (X @ W[:, :2].T + W[:, 2]) &gt; 0
+    return bool((pred == y[:, None].astype(bool)).all(axis=0).any())
+
+
+holds = bool(c041())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c042 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>A classifier that never predicts the positive class can achieve above 95% accuracy on a dataset.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A classifier that never predicts the positive class can achieve above 95% accuracy on a dataset.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c042():
+    import numpy as np
+    y = np.array([1] * 30 + [0] * 970)
+    pred = np.zeros_like(y)
+    return (pred == y).mean() &gt; 0.95
+
+
+holds = bool(c042())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>A classifier that never predicts the positive class cannot achieve above 95% accuracy on any dataset.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c042():
+    import numpy as np
+    y = np.array([1] * 30 + [0] * 970)
+    pred = np.zeros_like(y)
+    return (pred == y).mean() &gt; 0.95
+
+
+holds = bool(c042())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c043 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>A k-nearest-neighbours classifier with k equal to the training-set size predicts the majority training class for every input.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A k-nearest-neighbours classifier with k equal to the training-set size predicts the majority training class for every input.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c043():
+    import numpy as np
+    rng = np.random.default_rng(14)
+    Xtr = rng.normal(size=(51, 3))
+    ytr = np.array([0] * 30 + [1] * 21)
+    majority = np.bincount(ytr).argmax()
+    Q = rng.normal(0, 5, size=(500, 3))
+    k = len(Xtr)
+    preds = []
+    for q in Q:
+        idx = np.argsort(np.linalg.norm(Xtr - q, axis=1))[:k]
+        preds.append(np.bincount(ytr[idx]).argmax())
+    return all(p == majority for p in preds)
+
+
+holds = bool(c043())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>A k-nearest-neighbours classifier with k equal to the training-set size can predict a non-majority class for some input.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c043():
+    import numpy as np
+    rng = np.random.default_rng(14)
+    Xtr = rng.normal(size=(51, 3))
+    ytr = np.array([0] * 30 + [1] * 21)
+    majority = np.bincount(ytr).argmax()
+    Q = rng.normal(0, 5, size=(500, 3))
+    k = len(Xtr)
+    preds = []
+    for q in Q:
+        idx = np.argsort(np.linalg.norm(Xtr - q, axis=1))[:k]
+        preds.append(np.bincount(ytr[idx]).argmax())
+    return all(p == majority for p in preds)
+
+
+holds = bool(c043())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c044 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>The softmax function is unchanged when the same constant is added to all logits.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The softmax function is unchanged when the same constant is added to all logits.</div><div><span class='st pass'>PASS</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c044():
+    import numpy as np
+    rng = np.random.default_rng(15)
+    z = rng.normal(size=(100, 10))
+
+    def sm(v):
+        e = np.exp(v - v.max(axis=1, keepdims=True))
+        return e / e.sum(axis=1, keepdims=True)
+    return np.allclose(sm(z), sm(z + 7.3))
+
+
+holds = bool(c044())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The softmax function changes when the same constant is added to all logits.</div><div><span class='st fail'>FAIL</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c044():
+    import numpy as np
+    rng = np.random.default_rng(15)
+    z = rng.normal(size=(100, 10))
+
+    def sm(v):
+        e = np.exp(v - v.max(axis=1, keepdims=True))
+        return e / e.sum(axis=1, keepdims=True)
+    return np.allclose(sm(z), sm(z + 7.3))
+
+
+holds = bool(c044())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c045 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>The softmax function is unchanged when all logits are multiplied by the same positive constant.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The softmax function is unchanged when all logits are multiplied by the same positive constant.</div><div><span class='st fail'>FAIL</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c045():
+    import numpy as np
+    rng = np.random.default_rng(16)
+    z = rng.normal(size=(100, 10))
+
+    def sm(v):
+        e = np.exp(v - v.max(axis=1, keepdims=True))
+        return e / e.sum(axis=1, keepdims=True)
+    return np.allclose(sm(z), sm(z * 3.0))
+
+
+holds = bool(c045())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The softmax function can change when all logits are multiplied by the same positive constant.</div><div><span class='st pass'>PASS</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.09s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c045():
+    import numpy as np
+    rng = np.random.default_rng(16)
+    z = rng.normal(size=(100, 10))
+
+    def sm(v):
+        e = np.exp(v - v.max(axis=1, keepdims=True))
+        return e / e.sum(axis=1, keepdims=True)
+    return np.allclose(sm(z), sm(z * 3.0))
+
+
+holds = bool(c045())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c046 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>A two-layer ReLU network with all weights and biases initialised to zero breaks hidden-unit symmetry when trained with gradient descent.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>A two-layer ReLU network with all weights and biases initialised to zero breaks hidden-unit symmetry when trained with gradient descent.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.14s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c046():
+    import numpy as np
+    rng = np.random.default_rng(17)
+    X = rng.normal(size=(64, 3))
+    y = np.sin(X.sum(axis=1, keepdims=True))
+    H = 8
+    W1, b1 = np.zeros((3, H)), np.zeros(H)
+    W2, b2 = np.zeros((H, 1)), np.zeros(1)
+    for _ in range(300):
+        z1 = X @ W1 + b1
+        h = np.maximum(z1, 0)
+        out = h @ W2 + b2
+        g = 2 * (out - y) / len(X)
+        gW2, gb2 = h.T @ g, g.sum(0)
+        gh = g @ W2.T
+        gz1 = gh * (z1 &gt; 0)
+        gW1, gb1 = X.T @ gz1, gz1.sum(0)
+        W1 -= 0.1 * gW1; b1 -= 0.1 * gb1
+        W2 -= 0.1 * gW2; b2 -= 0.1 * gb2
+    identical = np.allclose(W1, W1[:, :1]) and np.allclose(W2, W2[0]) and np.allclose(b1, b1[0])
+    return not identical
+
+
+holds = bool(c046())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>A two-layer ReLU network with all weights and biases initialised to zero keeps all hidden units identical when trained with gradient descent.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c046():
+    import numpy as np
+    rng = np.random.default_rng(17)
+    X = rng.normal(size=(64, 3))
+    y = np.sin(X.sum(axis=1, keepdims=True))
+    H = 8
+    W1, b1 = np.zeros((3, H)), np.zeros(H)
+    W2, b2 = np.zeros((H, 1)), np.zeros(1)
+    for _ in range(300):
+        z1 = X @ W1 + b1
+        h = np.maximum(z1, 0)
+        out = h @ W2 + b2
+        g = 2 * (out - y) / len(X)
+        gW2, gb2 = h.T @ g, g.sum(0)
+        gh = g @ W2.T
+        gz1 = gh * (z1 &gt; 0)
+        gW1, gb1 = X.T @ gz1, gz1.sum(0)
+        W1 -= 0.1 * gW1; b1 -= 0.1 * gb1
+        W2 -= 0.1 * gW2; b2 -= 0.1 * gb2
+    identical = np.allclose(W1, W1[:, :1]) and np.allclose(W2, W2[0]) and np.allclose(b1, b1[0])
+    return not identical
+
+
+holds = bool(c046())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c047 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>Gradient descent on f(x) = x^2 with learning rate 1.1 diverges.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Gradient descent on f(x) = x^2 with learning rate 1.1 diverges.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c047():
+    x = 1.0
+    for _ in range(100):
+        x = x - 1.1 * 2 * x
+    return abs(x) &gt; 1e6
+
+
+holds = bool(c047())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Gradient descent on f(x) = x^2 with learning rate 1.1 converges.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c047():
+    x = 1.0
+    for _ in range(100):
+        x = x - 1.1 * 2 * x
+    return abs(x) &gt; 1e6
+
+
+holds = bool(c047())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c048 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>On a linear-regression problem with irrelevant features, L1 regularisation (lasso) sets some coefficients exactly to zero while L2 regularisation (ridge) generally does not.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>On a linear-regression problem with irrelevant features, L1 regularisation (lasso) sets some coefficients exactly to zero while L2 regularisation (ridge) generally does not.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.17s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c048():
+    import numpy as np
+    rng = np.random.default_rng(18)
+    n, p = 200, 10
+    X = rng.normal(size=(n, p))
+    beta = np.array([3.0, -2.0, 1.5] + [0.0] * 7)
+    y = X @ beta + rng.normal(0, 1, n)
+    X = (X - X.mean(0)) / X.std(0)
+    y = y - y.mean()
+    lam = 0.3
+    b = np.zeros(p)
+    for _ in range(500):  # coordinate descent for lasso
+        for j in range(p):
+            r = y - X @ b + X[:, j] * b[j]
+            rho = X[:, j] @ r / n
+            b[j] = np.sign(rho) * max(abs(rho) - lam, 0.0)
+    ridge = np.linalg.solve(X.T @ X + 10.0 * np.eye(p), X.T @ y)
+    return int((b == 0).sum()) &gt; 0 and int((ridge == 0).sum()) == 0
+
+
+holds = bool(c048())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>On a linear-regression problem with irrelevant features, lasso does not set coefficients exactly to zero any more than ridge does.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.19s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c048():
+    import numpy as np
+    rng = np.random.default_rng(18)
+    n, p = 200, 10
+    X = rng.normal(size=(n, p))
+    beta = np.array([3.0, -2.0, 1.5] + [0.0] * 7)
+    y = X @ beta + rng.normal(0, 1, n)
+    X = (X - X.mean(0)) / X.std(0)
+    y = y - y.mean()
+    lam = 0.3
+    b = np.zeros(p)
+    for _ in range(500):  # coordinate descent for lasso
+        for j in range(p):
+            r = y - X @ b + X[:, j] * b[j]
+            rho = X[:, j] @ r / n
+            b[j] = np.sign(rho) * max(abs(rho) - lam, 0.0)
+    ridge = np.linalg.solve(X.T @ X + 10.0 * np.eye(p), X.T @ y)
+    return int((b == 0).sum()) &gt; 0 and int((ridge == 0).sum()) == 0
+
+
+holds = bool(c048())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c049 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>Mean squared error and mean absolute error always rank two models&#x27; predictions in the same order.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Mean squared error and mean absolute error always rank two models&#x27; predictions in the same order.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.13s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c049():
+    import numpy as np
+    y = np.zeros(4)
+    a = np.array([1.0, 1.0, 1.0, 1.0])
+    b = np.array([0.0, 0.0, 0.0, 3.0])
+    mse_a, mse_b = np.mean((a - y) ** 2), np.mean((b - y) ** 2)
+    mae_a, mae_b = np.mean(np.abs(a - y)), np.mean(np.abs(b - y))
+    return (mse_a &lt; mse_b) == (mae_a &lt; mae_b)
+
+
+holds = bool(c049())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Mean squared error and mean absolute error can rank two models&#x27; predictions in opposite orders.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.13s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c049():
+    import numpy as np
+    y = np.zeros(4)
+    a = np.array([1.0, 1.0, 1.0, 1.0])
+    b = np.array([0.0, 0.0, 0.0, 3.0])
+    mse_a, mse_b = np.mean((a - y) ** 2), np.mean((b - y) ** 2)
+    mae_a, mae_b = np.mean(np.abs(a - y)), np.mean(np.abs(b - y))
+    return (mse_a &lt; mse_b) == (mae_a &lt; mae_b)
+
+
+holds = bool(c049())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c050 &middot; ml &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>ROC AUC is unchanged when all predicted scores are passed through the same strictly increasing function.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>ROC AUC is unchanged when all predicted scores are passed through the same strictly increasing function.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.14s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c050():
+    import numpy as np
+    rng = np.random.default_rng(19)
+    y = rng.integers(0, 2, 1000)
+    s = rng.normal(size=1000) + y
+
+    def auc(scores):
+        pos, neg = scores[y == 1], scores[y == 0]
+        return (pos[:, None] &gt; neg[None, :]).mean() + 0.5 * (pos[:, None] == neg[None, :]).mean()
+    return np.isclose(auc(s), auc(np.exp(3 * s))) and np.isclose(auc(s), auc(s ** 3))
+
+
+holds = bool(c050())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>ROC AUC can change when all predicted scores are passed through the same strictly increasing function.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c050():
+    import numpy as np
+    rng = np.random.default_rng(19)
+    y = rng.integers(0, 2, 1000)
+    s = rng.normal(size=1000) + y
+
+    def auc(scores):
+        pos, neg = scores[y == 1], scores[y == 0]
+        return (pos[:, None] &gt; neg[None, :]).mean() + 0.5 * (pos[:, None] == neg[None, :]).mean()
+    return np.isclose(auc(s), auc(np.exp(3 * s))) and np.isclose(auc(s), auc(s ** 3))
+
+
+holds = bool(c050())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c051 &middot; ml &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>Log loss (cross-entropy) is unchanged when all predicted probabilities are passed through the same strictly increasing function mapping (0,1) to (0,1).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Log loss (cross-entropy) is unchanged when all predicted probabilities are passed through the same strictly increasing function mapping (0,1) to (0,1).</div><div><span class='st fail'>FAIL</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c051():
+    import numpy as np
+    rng = np.random.default_rng(20)
+    y = rng.integers(0, 2, 1000)
+    p = np.clip(1 / (1 + np.exp(-(rng.normal(size=1000) + 2 * y - 1))), 1e-6, 1 - 1e-6)
+
+    def logloss(q):
+        return -np.mean(y * np.log(q) + (1 - y) * np.log(1 - q))
+    return np.isclose(logloss(p), logloss(p ** 2))
+
+
+holds = bool(c051())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Log loss (cross-entropy) can change when all predicted probabilities are passed through the same strictly increasing function mapping (0,1) to (0,1).</div><div><span class='st pass'>PASS</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.15s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c051():
+    import numpy as np
+    rng = np.random.default_rng(20)
+    y = rng.integers(0, 2, 1000)
+    p = np.clip(1 / (1 + np.exp(-(rng.normal(size=1000) + 2 * y - 1))), 1e-6, 1 - 1e-6)
+
+    def logloss(q):
+        return -np.mean(y * np.log(q) + (1 - y) * np.log(1 - q))
+    return np.isclose(logloss(p), logloss(p ** 2))
+
+
+holds = bool(c051())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c052 &middot; security &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>After observing 624 consecutive 32-bit outputs of Python&#x27;s random module (Mersenne Twister), its future outputs can be predicted exactly.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>After observing 624 consecutive 32-bit outputs of Python&#x27;s random module (Mersenne Twister), its future outputs can be predicted exactly.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c052():
+    import random
+    M = 0xFFFFFFFF
+
+    def undo_right(y, s):
+        r = y
+        for _ in range(32 // s + 1):
+            r = y ^ (r &gt;&gt; s)
+        return r &amp; M
+
+    def undo_left(y, s, mask):
+        r = y
+        for _ in range(32 // s + 1):
+            r = y ^ ((r &lt;&lt; s) &amp; mask)
+        return r &amp; M
+
+    def untemper(y):
+        y = undo_right(y, 18)
+        y = undo_left(y, 15, 0xEFC60000)
+        y = undo_left(y, 7, 0x9D2C5680)
+        y = undo_right(y, 11)
+        return y
+    victim = random.Random(123456789)
+    observed = [victim.getrandbits(32) for _ in range(624)]
+    clone = random.Random()
+    clone.setstate((3, tuple([untemper(v) for v in observed] + [624]), None))
+    return all(clone.getrandbits(32) == victim.getrandbits(32) for _ in range(1000))
+
+
+holds = bool(c052())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Observing 624 consecutive 32-bit outputs of Python&#x27;s random module (Mersenne Twister) is not enough to predict its future outputs exactly.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c052():
+    import random
+    M = 0xFFFFFFFF
+
+    def undo_right(y, s):
+        r = y
+        for _ in range(32 // s + 1):
+            r = y ^ (r &gt;&gt; s)
+        return r &amp; M
+
+    def undo_left(y, s, mask):
+        r = y
+        for _ in range(32 // s + 1):
+            r = y ^ ((r &lt;&lt; s) &amp; mask)
+        return r &amp; M
+
+    def untemper(y):
+        y = undo_right(y, 18)
+        y = undo_left(y, 15, 0xEFC60000)
+        y = undo_left(y, 7, 0x9D2C5680)
+        y = undo_right(y, 11)
+        return y
+    victim = random.Random(123456789)
+    observed = [victim.getrandbits(32) for _ in range(624)]
+    clone = random.Random()
+    clone.setstate((3, tuple([untemper(v) for v in observed] + [624]), None))
+    return all(clone.getrandbits(32) == victim.getrandbits(32) for _ in range(1000))
+
+
+holds = bool(c052())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c053 &middot; security &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>Base64-encoded data cannot be recovered without knowing a secret key.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Base64-encoded data cannot be recovered without knowing a secret key.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c053():
+    import base64
+    secret = b&quot;patient record #4471: HbA1c 9.2&quot;
+    encoded = base64.b64encode(secret)
+    recovered = base64.b64decode(encoded)  # no key involved
+    return recovered != secret
+
+
+holds = bool(c053())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Base64-encoded data can be recovered without knowing any secret key.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c053():
+    import base64
+    secret = b&quot;patient record #4471: HbA1c 9.2&quot;
+    encoded = base64.b64encode(secret)
+    recovered = base64.b64decode(encoded)  # no key involved
+    return recovered != secret
+
+
+holds = bool(c053())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c054 &middot; security &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>The regular expression ^[a-z]+@[a-z]+\.com$ matches every valid email address ending in .com.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The regular expression ^[a-z]+@[a-z]+\.com$ matches every valid email address ending in .com.</div><div><span class='st fail'>FAIL</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.04s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c054():
+    import re
+    pat = re.compile(r&quot;^[a-z]+@[a-z]+\.com$&quot;)
+    valid = [&quot;alice@example.com&quot;, &quot;bob.smith@example.com&quot;, &quot;user1@mail.com&quot;,
+             &quot;first-last@company.com&quot;, &quot;a+tag@example.com&quot;]
+    return all(pat.match(e) for e in valid)
+
+
+holds = bool(c054())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The regular expression ^[a-z]+@[a-z]+\.com$ fails to match some valid email address ending in .com.</div><div><span class='st pass'>PASS</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c054():
+    import re
+    pat = re.compile(r&quot;^[a-z]+@[a-z]+\.com$&quot;)
+    valid = [&quot;alice@example.com&quot;, &quot;bob.smith@example.com&quot;, &quot;user1@mail.com&quot;,
+             &quot;first-last@company.com&quot;, &quot;a+tag@example.com&quot;]
+    return all(pat.match(e) for e in valid)
+
+
+holds = bool(c054())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c055 &middot; security &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>By default, hash() of the same Python string gives the same value across separate interpreter runs.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>By default, hash() of the same Python string gives the same value across separate interpreter runs.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c055():
+    import os
+    import subprocess
+    import sys
+    env = {k: v for k, v in os.environ.items() if k != &quot;PYTHONHASHSEED&quot;}
+    vals = {subprocess.run([sys.executable, &quot;-c&quot;, &quot;print(hash(&#x27;show-dont-cite&#x27;))&quot;],
+                           capture_output=True, text=True, env=env).stdout.strip()
+            for _ in range(4)}
+    return len(vals) == 1
+
+
+holds = bool(c055())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>By default, hash() of the same Python string can give different values across separate interpreter runs.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c055():
+    import os
+    import subprocess
+    import sys
+    env = {k: v for k, v in os.environ.items() if k != &quot;PYTHONHASHSEED&quot;}
+    vals = {subprocess.run([sys.executable, &quot;-c&quot;, &quot;print(hash(&#x27;show-dont-cite&#x27;))&quot;],
+                           capture_output=True, text=True, env=env).stdout.strip()
+            for _ in range(4)}
+    return len(vals) == 1
+
+
+holds = bool(c055())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c056 &middot; strings &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>UTF-8 encodes every Unicode scalar value in at most 4 bytes.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>UTF-8 encodes every Unicode scalar value in at most 4 bytes.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.23s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c056():
+    longest = 0
+    for cp in range(0x110000):
+        if 0xD800 &lt;= cp &lt;= 0xDFFF:
+            continue
+        n = len(chr(cp).encode(&quot;utf-8&quot;))
+        if n &gt; longest:
+            longest = n
+    return longest &lt;= 4
+
+
+holds = bool(c056())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>UTF-8 needs more than 4 bytes for some Unicode scalar value.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.22s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c056():
+    longest = 0
+    for cp in range(0x110000):
+        if 0xD800 &lt;= cp &lt;= 0xDFFF:
+            continue
+        n = len(chr(cp).encode(&quot;utf-8&quot;))
+        if n &gt; longest:
+            longest = n
+    return longest &lt;= 4
+
+
+holds = bool(c056())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c057 &middot; strings &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>For any Python str s, len(s) equals the number of bytes in s.encode(&#x27;utf-8&#x27;).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For any Python str s, len(s) equals the number of bytes in s.encode(&#x27;utf-8&#x27;).</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.03s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c057():
+    samples = [&quot;hello&quot;, &quot;café&quot;, &quot;Zubair&quot;, &quot;پښتو&quot;, &quot;日本&quot;, &quot;😀&quot;]
+    return all(len(s) == len(s.encode(&quot;utf-8&quot;)) for s in samples)
+
+
+holds = bool(c057())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For some Python str s, len(s) differs from the number of bytes in s.encode(&#x27;utf-8&#x27;).</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.02s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c057():
+    samples = [&quot;hello&quot;, &quot;café&quot;, &quot;Zubair&quot;, &quot;پښتو&quot;, &quot;日本&quot;, &quot;😀&quot;]
+    return all(len(s) == len(s.encode(&quot;utf-8&quot;)) for s in samples)
+
+
+holds = bool(c057())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c058 &middot; probability &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>The expected number of fair-coin flips needed to see two heads in a row (HH) is 6.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The expected number of fair-coin flips needed to see two heads in a row (HH) is 6.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.11s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c058():
+    import random
+    rng = random.Random(21)
+    trials, total = 200000, 0
+    for _ in range(trials):
+        prev, n = None, 0
+        while True:
+            f = rng.random() &lt; 0.5
+            n += 1
+            if f and prev:
+                break
+            prev = f
+        total += n
+    return abs(total / trials - 6) &lt; 0.05
+
+
+holds = bool(c058())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The expected number of fair-coin flips needed to see two heads in a row (HH) is not 6.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c058():
+    import random
+    rng = random.Random(21)
+    trials, total = 200000, 0
+    for _ in range(trials):
+        prev, n = None, 0
+        while True:
+            f = rng.random() &lt; 0.5
+            n += 1
+            if f and prev:
+                break
+            prev = f
+        total += n
+    return abs(total / trials - 6) &lt; 0.05
+
+
+holds = bool(c058())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c059 &middot; probability &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>For a fair coin, the expected number of flips until the pattern HT first appears equals the expected number until HH first appears.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For a fair coin, the expected number of flips until the pattern HT first appears equals the expected number until HH first appears.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.47s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c059():
+    import random
+    rng = random.Random(22)
+
+    def mean_wait(pattern, trials=200000):
+        total = 0
+        for _ in range(trials):
+            last, n = &quot;&quot;, 0
+            while True:
+                last = (last + (&quot;H&quot; if rng.random() &lt; 0.5 else &quot;T&quot;))[-2:]
+                n += 1
+                if last == pattern:
+                    break
+            total += n
+        return total / trials
+    ht, hh = mean_wait(&quot;HT&quot;), mean_wait(&quot;HH&quot;)  # theory: 4 vs 6
+    return abs(ht - hh) &lt; 0.2
+
+
+holds = bool(c059())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For a fair coin, the expected number of flips until the pattern HT first appears differs from the expected number until HH first appears.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.32s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c059():
+    import random
+    rng = random.Random(22)
+
+    def mean_wait(pattern, trials=200000):
+        total = 0
+        for _ in range(trials):
+            last, n = &quot;&quot;, 0
+            while True:
+                last = (last + (&quot;H&quot; if rng.random() &lt; 0.5 else &quot;T&quot;))[-2:]
+                n += 1
+                if last == pattern:
+                    break
+            total += n
+        return total / trials
+    ht, hh = mean_wait(&quot;HT&quot;), mean_wait(&quot;HH&quot;)  # theory: 4 vs 6
+    return abs(ht - hh) &lt; 0.2
+
+
+holds = bool(c059())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='REFUTED' data-w='0'><div class='head'><span class='badge' style='background:#1d5fa8'>REFUTED</span><span class='meta'>c060 &middot; linear-algebra &middot; ground truth: <b>false</b> &middot; single-PoC baseline would say REFUTED</span></div><div class='claim'>Matrix multiplication of square matrices is commutative: AB = BA for all square A and B.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Matrix multiplication of square matrices is commutative: AB = BA for all square A and B.</div><div><span class='st fail'>FAIL</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c060():
+    import numpy as np
+    rng = np.random.default_rng(23)
+    for _ in range(100):
+        A, B = rng.normal(size=(3, 3)), rng.normal(size=(3, 3))
+        if not np.allclose(A @ B, B @ A):
+            return False
+    return True
+
+
+holds = bool(c060())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Matrix multiplication of square matrices is not commutative: AB can differ from BA.</div><div><span class='st pass'>PASS</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.10s</span></div><details><summary>output</summary><pre>original claim holds: False
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c060():
+    import numpy as np
+    rng = np.random.default_rng(23)
+    for _ in range(100):
+        A, B = rng.normal(size=(3, 3)), rng.normal(size=(3, 3))
+        if not np.allclose(A @ B, B @ A):
+            return False
+    return True
+
+
+holds = bool(c060())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c061 &middot; linear-algebra &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>For square matrices, det(AB) = det(A) * det(B).</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>For square matrices, det(AB) = det(A) * det(B).</div><div><span class='st pass'>PASS</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.12s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c061():
+    import numpy as np
+    rng = np.random.default_rng(24)
+    for n in (2, 3, 5, 8):
+        for _ in range(200):
+            A, B = rng.normal(size=(n, n)), rng.normal(size=(n, n))
+            if not np.isclose(np.linalg.det(A @ B), np.linalg.det(A) * np.linalg.det(B), rtol=1e-8, atol=1e-10):
+                return False
+    return True
+
+
+holds = bool(c061())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>For some square matrices, det(AB) differs from det(A) * det(B).</div><div><span class='st fail'>FAIL</span><span class='flag'>no_comparison</span><span class='meta'> &middot; 0.13s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c061():
+    import numpy as np
+    rng = np.random.default_rng(24)
+    for n in (2, 3, 5, 8):
+        for _ in range(200):
+            A, B = rng.normal(size=(n, n)), rng.normal(size=(n, n))
+            if not np.isclose(np.linalg.det(A @ B), np.linalg.det(A) * np.linalg.det(B), rtol=1e-8, atol=1e-10):
+                return False
+    return True
+
+
+holds = bool(c061())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='DEMONSTRATED' data-w='0'><div class='head'><span class='badge' style='background:#1f7a4d'>DEMONSTRATED</span><span class='meta'>c062 &middot; linear-algebra &middot; ground truth: <b>true</b> &middot; single-PoC baseline would say DEMONSTRATED</span></div><div class='claim'>All eigenvalues of a real symmetric matrix are real.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>All eigenvalues of a real symmetric matrix are real.</div><div><span class='st pass'>PASS</span><span class='meta'> &middot; 0.16s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: PASS</pre></details><details><summary>proof-of-concept code</summary><pre>def c062():
+    import numpy as np
+    rng = np.random.default_rng(25)
+    for n in (2, 5, 10, 30):
+        for _ in range(200):
+            M = rng.normal(size=(n, n))
+            S = (M + M.T) / 2
+            ev = np.linalg.eigvals(S)  # general solver, not eigvalsh
+            if np.max(np.abs(ev.imag)) &gt; 1e-9:
+                return False
+    return True
+
+
+holds = bool(c062())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if True else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Some real symmetric matrix has a non-real eigenvalue.</div><div><span class='st fail'>FAIL</span><span class='meta'> &middot; 0.16s</span></div><details><summary>output</summary><pre>original claim holds: True
+RESULT: FAIL</pre></details><details><summary>proof-of-concept code</summary><pre>def c062():
+    import numpy as np
+    rng = np.random.default_rng(25)
+    for n in (2, 5, 10, 30):
+        for _ in range(200):
+            M = rng.normal(size=(n, n))
+            S = (M + M.T) / 2
+            ev = np.linalg.eigvals(S)  # general solver, not eigvalsh
+            if np.max(np.abs(ev.imag)) &gt; 1e-9:
+                return False
+    return True
+
+
+holds = bool(c062())
+print(&#x27;original claim holds:&#x27;, holds)
+statement_true = holds if False else not holds
+print(&#x27;RESULT: PASS&#x27; if statement_true else &#x27;RESULT: FAIL&#x27;)
+</pre></details></div></div></div><div class='card' data-v='ABSTAIN' data-w='0'><div class='head'><span class='badge' style='background:#5f6368'>ABSTAIN</span><span class='meta'>u001 &middot; history &middot; ground truth: <b>untestable</b> &middot; single-PoC baseline would say ABSTAIN</span></div><div class='claim'>Python was first released publicly in 1991.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Python was first released publicly in 1991.</div><div class='st other'>ABSTAINED</div><div class='meta'>no executable check exists for this claim</div></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Python was not first released publicly in 1991.</div><div class='st other'>ABSTAINED</div><div class='meta'>no executable check exists for this claim</div></div></div></div><div class='card' data-v='ABSTAIN' data-w='0'><div class='head'><span class='badge' style='background:#5f6368'>ABSTAIN</span><span class='meta'>u002 &middot; history &middot; ground truth: <b>untestable</b> &middot; single-PoC baseline would say ABSTAIN</span></div><div class='claim'>The Transformer architecture was introduced in the paper &#x27;Attention Is All You Need&#x27;.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>The Transformer architecture was introduced in the paper &#x27;Attention Is All You Need&#x27;.</div><div class='st other'>ABSTAINED</div><div class='meta'>no executable check exists for this claim</div></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>The Transformer architecture was not introduced in the paper &#x27;Attention Is All You Need&#x27;.</div><div class='st other'>ABSTAINED</div><div class='meta'>no executable check exists for this claim</div></div></div></div><div class='card' data-v='ABSTAIN' data-w='0'><div class='head'><span class='badge' style='background:#5f6368'>ABSTAIN</span><span class='meta'>u003 &middot; opinion &middot; ground truth: <b>untestable</b> &middot; single-PoC baseline would say ABSTAIN</span></div><div class='claim'>Functional programming produces more maintainable code than object-oriented programming.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Functional programming produces more maintainable code than object-oriented programming.</div><div class='st other'>ABSTAINED</div><div class='meta'>no executable check exists for this claim</div></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Functional programming does not produce more maintainable code than object-oriented programming.</div><div class='st other'>ABSTAINED</div><div class='meta'>no executable check exists for this claim</div></div></div></div><div class='card' data-v='ABSTAIN' data-w='0'><div class='head'><span class='badge' style='background:#5f6368'>ABSTAIN</span><span class='meta'>u004 &middot; opinion &middot; ground truth: <b>untestable</b> &middot; single-PoC baseline would say ABSTAIN</span></div><div class='claim'>Most machine-learning failures in production are caused by data problems rather than model problems.</div><div class='sides'><div class='side'><h4>PoC for the claim</h4><div class='meta'>Most machine-learning failures in production are caused by data problems rather than model problems.</div><div class='st other'>ABSTAINED</div><div class='meta'>no executable check exists for this claim</div></div><div class='side'><h4>PoC for the negation</h4><div class='meta'>Most machine-learning failures in production are not caused by data problems rather than model problems.</div><div class='st other'>ABSTAINED</div><div class='meta'>no executable check exists for this claim</div></div></div></div><script>
+function f(v,b){document.querySelectorAll('.filters button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+document.querySelectorAll('.card').forEach(c=>{c.style.display=(v==='ALL'||c.dataset.v===v||(v==='WRONG'&&c.dataset.w==='1'))?'':'none'})}
+</script></main></body></html>
