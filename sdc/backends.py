@@ -24,7 +24,7 @@ class OpenAICompatibleBackend(ChatBackend):
 
     def __init__(self, model: str | None = None, api_base: str | None = None,
                  api_key: str | None = None, temperature: float = 0.2,
-                 max_tokens: int = 2048, max_retries: int = 6):
+                 max_tokens: int | None = None, max_retries: int = 6):
         self.model = model or os.environ.get("SDC_MODEL")
         self.api_base = (api_base or os.environ.get("SDC_API_BASE", "")).rstrip("/")
         self.api_key = api_key or os.environ.get("SDC_API_KEY", "")
@@ -32,7 +32,7 @@ class OpenAICompatibleBackend(ChatBackend):
             raise ValueError("Set SDC_MODEL and SDC_API_BASE (and SDC_API_KEY if the "
                              "endpoint needs one), or pass --model/--api-base.")
         self.temperature = temperature
-        self.max_tokens = max_tokens
+        self.max_tokens = max_tokens or int(os.environ.get("SDC_MAX_TOKENS", "8192"))
         self.max_retries = max_retries
         self.name = f"api:{self.model}"
 
